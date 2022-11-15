@@ -17,27 +17,28 @@ func updateItemQuality(item *Item) {
 	_sulFurans := "Sulfuras, Hand of Ragnaros"
 	_conjured := "Conjured Mana Cake"
 
+	_isDegrade := item.Name != _agedBrie && item.Name != _backStage && item.Name != _sulFurans
 	degradeRate := -1
 	if item.Name == _conjured {
 		degradeRate = -2
 	}
 
-	if item.Name != _agedBrie && item.Name != _backStage && item.Name != _sulFurans {
+	if _isDegrade {
 		adjustQuality(item, degradeRate)
+	}
 
-	} else {
+	if item.Name == _agedBrie || item.Name == _backStage {
 		adjustQuality(item, 1)
+	}
 
-		if item.Name == _backStage {
-			if item.SellIn < 11 {
-				adjustQuality(item, 1)
-			}
-
-			if item.SellIn < 6 {
-				adjustQuality(item, 1)
-			}
+	if item.Name == _backStage {
+		if item.SellIn < 11 {
+			adjustQuality(item, 1)
 		}
 
+		if item.SellIn < 6 {
+			adjustQuality(item, 1)
+		}
 	}
 
 	if item.Name != _sulFurans {
