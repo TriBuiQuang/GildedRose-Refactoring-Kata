@@ -21,11 +21,7 @@ func UpdateQuality(items []*Item) {
 func updateItemQuality(item *Item) {
 	_isDegrade := item.Name != agedBrie && item.Name != backStage && item.Name != sulFurans
 	_isExpired := item.SellIn < 1
-	_degradeRate := determineDegradeRate(item)
-
-	if _isExpired {
-		_degradeRate *= 2
-	}
+	_degradeRate := determineDegradeRate(item, _isExpired)
 
 	if _isDegrade {
 		adjustQuality(item, _degradeRate)
@@ -50,7 +46,6 @@ func updateItemQuality(item *Item) {
 	}
 
 	if _isExpired {
-
 		if item.Name != agedBrie {
 			if item.Name == backStage || item.Name == sulFurans {
 				item.Quality = 0
@@ -61,11 +56,16 @@ func updateItemQuality(item *Item) {
 	}
 }
 
-func determineDegradeRate(item *Item) int {
+func determineDegradeRate(item *Item, _isExpired bool) int {
 	degradeRate := -1
 	if item.Name == conjured {
 		degradeRate = -2
 	}
+
+	if _isExpired {
+		degradeRate *= 2
+	}
+
 	return degradeRate
 }
 
