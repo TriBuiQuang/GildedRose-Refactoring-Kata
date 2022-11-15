@@ -7,18 +7,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Foo(t *testing.T) {
-	t.Parallel()
-	var items = []*gildedrose.Item{
-		{"foo", 0, 0},
-	}
+// func Test_Foo(t *testing.T) {
+// 	t.Parallel()
+// 	var items = []*gildedrose.Item{
+// 		{"foo", 0, 0},
+// 	}
 
-	gildedrose.UpdateQuality(items)
+// 	gildedrose.UpdateQuality(items)
 
-	if items[0].Name != "fixme" {
-		t.Errorf("Name: Expected %s but got %s ", "fixme", items[0].Name)
-	}
-}
+// 	if items[0].Name != "fixme" {
+// 		t.Errorf("Name: Expected %s but got %s ", "fixme", items[0].Name)
+// 	}
+// }
 
 func Test_UpdateQuality(t *testing.T) {
 	t.Parallel()

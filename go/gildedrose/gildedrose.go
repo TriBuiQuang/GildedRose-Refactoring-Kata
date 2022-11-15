@@ -15,30 +15,29 @@ func updateItemQuality(item *Item) {
 	_agedBrie := "Aged Brie"
 	_backStage := "Backstage passes to a TAFKAL80ETC concert"
 	_sulFurans := "Sulfuras, Hand of Ragnaros"
+	_conjured := "Conjured Mana Cake"
 
-	if item.Name != _agedBrie && item.Name != _backStage {
-		if item.Quality > 0 {
+	degradeRate := -1
+	if item.Name == _conjured {
+		degradeRate = -2
+	}
 
-			if item.Name != _sulFurans {
-				item.Quality = item.Quality - 1
-			}
-		}
+	if item.Name != _agedBrie && item.Name != _backStage && item.Name != _sulFurans {
+		adjustQuality(item, degradeRate)
+
 	} else {
-		if item.Quality < 50 {
-			item.Quality = item.Quality + 1
-			if item.Name == _backStage {
-				if item.SellIn < 11 {
-					if item.Quality < 50 {
-						item.Quality = item.Quality + 1
-					}
-				}
-				if item.SellIn < 6 {
-					if item.Quality < 50 {
-						item.Quality = item.Quality + 1
-					}
-				}
+		adjustQuality(item, 1)
+
+		if item.Name == _backStage {
+			if item.SellIn < 11 {
+				adjustQuality(item, 1)
+			}
+
+			if item.SellIn < 6 {
+				adjustQuality(item, 1)
 			}
 		}
+
 	}
 
 	if item.Name != _sulFurans {
@@ -47,23 +46,19 @@ func updateItemQuality(item *Item) {
 
 	if item.SellIn < 0 {
 		if item.Name != _agedBrie {
-			if item.Name != _backStage {
-				if item.Quality > 0 {
-					if item.Name != _sulFurans {
-						item.Quality = item.Quality - 1
-					}
-				}
+			if item.Name != _backStage && item.Name != _sulFurans {
+				adjustQuality(item, degradeRate)
 			} else {
-				item.Quality = item.Quality - item.Quality
+				item.Quality = 0
 			}
 		} else {
-			adjustQuality(item)
+			adjustQuality(item, 1)
 		}
 	}
 }
 
-func adjustQuality(item *Item) {
+func adjustQuality(item *Item, adjustment int) {
 	if item.Quality < 50 && item.Quality >= 0 {
-		item.Quality = item.Quality + 1
+		item.Quality = item.Quality + adjustment
 	}
 }
