@@ -5,6 +5,13 @@ type Item struct {
 	SellIn, Quality int
 }
 
+const (
+	agedBrie  = "Aged Brie"
+	backStage = "Backstage passes to a TAFKAL80ETC concert"
+	sulFurans = "Sulfuras, Hand of Ragnaros"
+	conjured  = "Conjured Mana Cake"
+)
+
 func UpdateQuality(items []*Item) {
 	for _, item := range items {
 		updateItemQuality(item)
@@ -12,26 +19,23 @@ func UpdateQuality(items []*Item) {
 }
 
 func updateItemQuality(item *Item) {
-	_agedBrie := "Aged Brie"
-	_backStage := "Backstage passes to a TAFKAL80ETC concert"
-	_sulFurans := "Sulfuras, Hand of Ragnaros"
-	_conjured := "Conjured Mana Cake"
+	_isDegrade := item.Name != agedBrie && item.Name != backStage && item.Name != sulFurans
+	_isExpired := item.SellIn < 1
+	_degradeRate := determineDegradeRate(item)
 
-	_isDegrade := item.Name != _agedBrie && item.Name != _backStage && item.Name != _sulFurans
-	degradeRate := -1
-	if item.Name == _conjured {
-		degradeRate = -2
+	if _isExpired {
+		_degradeRate *= 2
 	}
 
 	if _isDegrade {
-		adjustQuality(item, degradeRate)
+		adjustQuality(item, _degradeRate)
 	}
 
-	if item.Name == _agedBrie || item.Name == _backStage {
+	if item.Name == agedBrie || item.Name == backStage {
 		adjustQuality(item, 1)
 	}
 
-	if item.Name == _backStage {
+	if item.Name == backStage {
 		if item.SellIn < 11 {
 			adjustQuality(item, 1)
 		}
@@ -41,23 +45,28 @@ func updateItemQuality(item *Item) {
 		}
 	}
 
-	if item.Name != _sulFurans {
+	if item.Name != sulFurans {
 		item.SellIn = item.SellIn - 1
 	}
 
-	if item.SellIn < 0 {
-		if _isDegrade {
-			adjustQuality(item, degradeRate)
-		}
+	if _isExpired {
 
-		if item.Name != _agedBrie {
-			if item.Name == _backStage || item.Name == _sulFurans {
+		if item.Name != agedBrie {
+			if item.Name == backStage || item.Name == sulFurans {
 				item.Quality = 0
 			}
 		} else {
 			adjustQuality(item, 1)
 		}
 	}
+}
+
+func determineDegradeRate(item *Item) int {
+	degradeRate := -1
+	if item.Name == conjured {
+		degradeRate = -2
+	}
+	return degradeRate
 }
 
 func adjustQuality(item *Item, adjustment int) {
