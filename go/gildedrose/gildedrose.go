@@ -46,10 +46,12 @@ func updateItemQuality(item *Item) {
 	}
 
 	if item.SellIn < 0 {
+		if _isDegrade {
+			adjustQuality(item, degradeRate)
+		}
+
 		if item.Name != _agedBrie {
-			if item.Name != _backStage && item.Name != _sulFurans {
-				adjustQuality(item, degradeRate)
-			} else {
+			if item.Name == _backStage || item.Name == _sulFurans {
 				item.Quality = 0
 			}
 		} else {
